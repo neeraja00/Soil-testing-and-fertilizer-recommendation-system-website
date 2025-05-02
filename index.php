@@ -1,0 +1,440 @@
+<?php
+session_start();
+require_once 'config/database.php';
+require_once 'includes/functions.php';
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['user_id']);
+
+// Remove automatic redirection to dashboard
+?>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Testing & Fertilizer Recommendation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4CAF50',
+                        secondary: '#2E7D32',
+                        accent: '#8BC34A',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo and Title -->
+                <div class="flex items-center">
+                    <a href="index.php" class="flex items-center">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS28gxPzJdFKyumSBAoMUUlHcwa8O8iBW2b-TcccCwViZ5p3MsWH3ap_UoqSuxdYO8l4xY&usqp=CAU" 
+                             alt="Soil Testing Logo" 
+                             class="h-12 w-12 rounded-full">
+                        <span class="ml-3 text-xl font-semibold text-gray-800">Soil Testing System</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium scroll-smooth">Features</a>
+                    <a href="analysis.php" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium scroll-smooth">Analysis</a>
+                    <a href="#testimonials" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium scroll-smooth">Testimonials</a>
+                    <a href="contact.php" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                    <?php if (!$isLoggedIn): ?>
+                        <button class="bg-white text-primary border border-primary hover:bg-primary hover:text-white px-4 py-2 rounded-md text-sm font-medium" id="loginBtn">Login</button>
+                        <button class="bg-primary text-white hover:bg-secondary px-4 py-2 rounded-md text-sm font-medium" id="registerBtn">Register</button>
+                    <?php else: ?>
+                        <a href="dashboard.php" class="bg-primary text-white hover:bg-secondary px-4 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                        <a href="auth/logout.php" class="bg-white text-primary border border-primary hover:bg-primary hover:text-white px-4 py-2 rounded-md text-sm font-medium">Logout</a>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-600 hover:text-primary focus:outline-none" id="hamburger">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden" id="mobileMenu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#features" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium scroll-smooth">Features</a>
+                <a href="analysis.php" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium scroll-smooth">Analysis</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium scroll-smooth">Testimonials</a>
+                <a href="contact.php" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                <?php if (!$isLoggedIn): ?>
+                    <button class="w-full text-left bg-white text-primary border border-primary hover:bg-primary hover:text-white px-4 py-2 rounded-md text-sm font-medium" id="mobileLoginBtn">Login</button>
+                    <button class="w-full text-left bg-primary text-white hover:bg-secondary px-4 py-2 rounded-md text-sm font-medium mt-2" id="mobileRegisterBtn">Register</button>
+                <?php else: ?>
+                    <a href="dashboard.php" class="w-full text-left bg-primary text-white hover:bg-secondary px-4 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    <a href="auth/logout.php" class="w-full text-left bg-white text-primary border border-primary hover:bg-primary hover:text-white px-4 py-2 rounded-md text-sm font-medium mt-2">Logout</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-r from-primary to-secondary text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">Optimize Your Soil Health</h1>
+                    <p class="text-xl mb-8">Get precise soil analysis and customized fertilizer recommendations to maximize your crop yield</p>
+                    <div class="space-y-4 md:space-y-0 md:space-x-4">
+                        <a href="dashboard1.php" class="bg-white text-primary hover:bg-gray-100 px-6 py-3 rounded-lg text-lg font-semibold">Test Your Soil Now</a>
+                        <a href="aboutOfSoil.php" class="bg-transparent border-2 border-white hover:bg-white hover:text-primary px-6 py-3 rounded-lg text-lg font-semibold" id="heroLearnBtn">Learn More</a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <img src="https://thumbs.dreamstime.com/b/image-organic-fertilizers-moist-soil-agriculture-concept-close-up-image-organic-fertilizers-being-applied-to-moist-soil-339869880.jpg" 
+                         alt="Soil Testing" 
+                         class="rounded-lg shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Powerful Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <div class="text-primary text-3xl mb-4">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Comprehensive Analysis</h3>
+                    <p class="text-gray-600">Detailed testing for pH levels, NPK values, organic matter, and micronutrients</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <div class="text-primary text-3xl mb-4">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Crop-Specific Recommendations</h3>
+                    <p class="text-gray-600">Personalized fertilizer plans tailored to your specific crops</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <div class="text-primary text-3xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Historical Tracking</h3>
+                    <p class="text-gray-600">Monitor soil health improvements over time with our dashboard</p>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <div class="text-primary text-3xl mb-4">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Mobile Friendly</h3>
+                    <p class="text-gray-600">Access your soil data and recommendations anywhere, anytime</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                    <h3 class="text-xl font-semibold mb-2">Collect Soil Sample</h3>
+                    <p class="text-gray-600">Follow our easy guide to collect a representative soil sample from your field</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                    <h3 class="text-xl font-semibold mb-2">Enter Sample Data</h3>
+                    <p class="text-gray-600">Input your soil test results or send your sample to our lab for analysis</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                    <h3 class="text-xl font-semibold mb-2">Get Recommendations</h3>
+                    <p class="text-gray-600">Receive customized fertilizer and amendment recommendations</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
+                    <h3 class="text-xl font-semibold mb-2">Implement & Monitor</h3>
+                    <p class="text-gray-600">Apply the recommendations and track improvements in your soil health</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12">What Farmers Say</h2>
+            <div class="relative overflow-hidden">
+                <div id="testimonialSlider" class="flex transition-transform duration-500 ease-in-out">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-slide min-w-full">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-gray-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
+                                <p class="text-gray-600 mb-4">"This system helped me reduce fertilizer costs by 30% while increasing my corn yield by 15% in just one season!"</p>
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John D." class="w-12 h-12 rounded-full">
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">John D.</h4>
+                                        <p class="text-gray-600">Corn Farmer, Iowa</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
+                                <p class="text-gray-600 mb-4">"The detailed recommendations helped me correct my soil pH imbalance that I didn't even know existed. Game changer!"</p>
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah M." class="w-12 h-12 rounded-full">
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">Sarah M.</h4>
+                                        <p class="text-gray-600">Vineyard Owner, California</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
+                                <p class="text-gray-600 mb-4">"As an organic farmer, the micronutrient recommendations have been invaluable for my soil health management."</p>
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Raj P." class="w-12 h-12 rounded-full">
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">Raj P.</h4>
+                                        <p class="text-gray-600">Organic Vegetable Farmer, India</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-slide min-w-full">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-gray-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
+                                <p class="text-gray-600 mb-4">"The soil analysis helped me understand exactly what my fields needed. My wheat production has never been better!"</p>
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Michael S." class="w-12 h-12 rounded-full">
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">Michael S.</h4>
+                                        <p class="text-gray-600">Wheat Farmer, Kansas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
+                                <p class="text-gray-600 mb-4">"The mobile app makes it so easy to track soil health over time. I can make decisions right in the field!"</p>
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Emma L." class="w-12 h-12 rounded-full">
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">Emma L.</h4>
+                                        <p class="text-gray-600">Berry Farmer, Oregon</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-6 rounded-lg shadow-md transform transition-all duration-300 hover:scale-105">
+                                <p class="text-gray-600 mb-4">"The seasonal recommendations have helped me optimize my fertilizer usage throughout the year."</p>
+                                <div class="flex items-center">
+                                    <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="Carlos R." class="w-12 h-12 rounded-full">
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold">Carlos R.</h4>
+                                        <p class="text-gray-600">Coffee Grower, Colombia</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                
+
+                <!-- Dots Indicator -->
+                <div class="flex justify-center mt-6 space-x-2">
+                    <button class="w-3 h-3 rounded-full bg-primary" onclick="goToSlide(0)"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300" onclick="goToSlide(1)"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-primary text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-6">Ready to Transform Your Soil Health?</h2>
+            <p class="text-xl mb-8">Join thousands of farmers who are already maximizing their yields with our system</p>
+            <a href="aboutOfSoil.php" class="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold" id="ctaBtn">Get Started Today</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <a href="#" class="flex items-center">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS28gxPzJdFKyumSBAoMUUlHcwa8O8iBW2b-TcccCwViZ5p3MsWH3ap_UoqSuxdYO8l4xY&usqp=CAU" 
+                             alt="Soil Testing Logo" 
+                             class="h-12 w-12 rounded-full">
+                        <span class="ml-3 text-xl font-semibold">SoilHealth</span>
+                    </a>
+                    <p class="mt-4 text-gray-400">Helping farmers make data-driven decisions for sustainable agriculture since 2015.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-white">How It Works</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-white">Testimonials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Soil Sampling Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Research Papers</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope mr-2"></i>
+                            info@soilhealth.com
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone mr-2"></i>
+                            +1 (800) 123-4567
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            123 Farm Lane, Agriculture City, CA 90210
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400">&copy; 2023 SoilHealth. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modals -->
+    <?php if (!$isLoggedIn): ?>
+        <?php include 'includes/login-modal.php'; ?>
+        <?php include 'includes/register-modal.php'; ?>
+    <?php endif; ?>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Modal handling
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+        const mobileRegisterBtn = document.getElementById('mobileRegisterBtn');
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const closeRegisterModal = document.getElementById('closeRegisterModal');
+
+        function showModal(modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        loginBtn?.addEventListener('click', () => showModal(loginModal));
+        registerBtn?.addEventListener('click', () => showModal(registerModal));
+        mobileLoginBtn?.addEventListener('click', () => showModal(loginModal));
+        mobileRegisterBtn?.addEventListener('click', () => showModal(registerModal));
+        closeLoginModal?.addEventListener('click', () => hideModal(loginModal));
+        closeRegisterModal?.addEventListener('click', () => hideModal(registerModal));
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) hideModal(loginModal);
+            if (e.target === registerModal) hideModal(registerModal);
+        });
+
+        let currentSlide = 0;
+        const totalSlides = 2;
+        const slider = document.getElementById('testimonialSlider');
+        const dots = document.querySelectorAll('#testimonials .w-3');
+
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('bg-primary', index === currentSlide);
+                dot.classList.toggle('bg-gray-300', index !== currentSlide);
+            });
+        }
+
+        function moveTestimonials(direction) {
+            if (direction === 'next') {
+                currentSlide = (currentSlide + 1) % totalSlides;
+            } else {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            }
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateDots();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            updateDots();
+        }
+
+        // Auto-rotate testimonials every 5 seconds
+        setInterval(() => moveTestimonials('next'), 5000);
+    </script>
+</body>
+</html> 
